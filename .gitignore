@@ -1,0 +1,13 @@
+# Keymaster wallets — NEVER commit (contain encrypted seed / keys)
+wallet.json
+*wallet*.json
+*.wallet
+
+# macOS
+.DS_Store
+
+# scratch output from the demo script
+/tmp/
+*_bound.json
+req.json
+rcp.json

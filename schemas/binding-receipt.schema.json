@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$comment": "Archon did:cid realization of Tom Jones' 'Consent Receipt with Binding' (Entity Statement) - the provider's signed response to a RelationshipBindingRequest. Issued back to the subject as an Archon VC. Items 10-12 (issuer public key, signature, encryption) are provided natively by Archon issuance and are not modeled as claims.",
+  "title": "BindingReceipt",
+  "type": "object",
+  "properties": {
+    "requestRef": {
+      "type": "string",
+      "description": "Field 1 - Binding Statement: did:cid (or message id) of the RelationshipBindingRequest this receipt answers. Signed by a well-known key of the issuer and made available to legitimate requests."
+    },
+    "issuer": {
+      "type": "string",
+      "description": "Field 2 (MANDATORY) - did:cid of the entity the subject is forming a binding with. May be a brand rather than a legal name."
+    },
+    "issuerRole": {
+      "type": "array",
+      "description": "Field 3 (MANDATORY) - role(s) the issuer takes (CSP, Identifier Provider, Data Controller).",
+      "items": { "type": "string" }
+    },
+    "legalName": {
+      "type": "string",
+      "description": "Field 4 (OPTIONAL) - included if Issuer is a brand, not a legal entity. A legal entity must be responsible for the receipt."
+    },
+    "subject": {
+      "type": "string",
+      "description": "Field 5 (MANDATORY) - did:cid supplied by the user. This receipt is bound to this identifier = the relationship anchor."
+    },
+    "claims": {
+      "type": "array",
+      "description": "Field 6 (OPTIONAL) - categories of permissions granted, or the permissions themselves (mirrors the request's granted permissions).",
+      "items": {
+        "type": "object",
+        "properties": {
+          "resource": { "type": "string" },
+          "actions": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "issueDate": {
+      "type": "integer",
+      "description": "Field 7 (MANDATORY) - Linux epoch seconds."
+    },
+    "expirationDate": {
+      "type": "integer",
+      "description": "Field 8 (OPTIONAL) - Linux epoch seconds."
+    },
+    "authorityHints": {
+      "type": "array",
+      "description": "Field 9 (OPTIONAL) - federation authorities subscribed to by this issuer.",
+      "items": { "type": "string" }
+    },
+    "sharedSpace": {
+      "type": "string",
+      "description": "Archon extension - did:cid of the Archon vault that is the relationship's shared information space. Revoking membership / the DID destroys the held data on termination (the paper's lifecycle-termination requirement)."
+    },
+    "notificationChannel": {
+      "type": "string",
+      "description": "Archon extension - dmail / address opened from provider to subject to meet the GDPR/CCPR notification requirement established at end of the registration ceremony."
+    }
+  },
+  "required": [
+    "requestRef",
+    "issuer",
+    "issuerRole",
+    "subject",
+    "issueDate"
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$comment": "Archon did:cid realization of Tom Jones' 'Consent to Create Binding Request' (Creating a Relationship Binding, 2026). Each property maps to a numbered field in the paper; see docs/field-mapping.md. The signed-VC envelope (item 1 message id, 14 subject public key, 15 signature, 16 encryption) is supplied natively by Archon issuance and is intentionally NOT modeled as claims.",
+  "title": "RelationshipBindingRequest",
+  "type": "object",
+  "properties": {
+    "messageId": {
+      "type": "string",
+      "description": "Field 1 - Identifier of the message (nonce / sequence / state). Protocol-level dedupe."
+    },
+    "issuer": {
+      "type": "string",
+      "description": "Field 2 (MANDATORY) - did:cid of the CSP / service provider that is the AUDIENCE of this request and supplies the encryption key."
+    },
+    "subject": {
+      "type": "string",
+      "description": "Field 3 (MANDATORY) - did:cid of the grantor (the user). Replaces the paper's UUID with a resolvable DID = the durable relationship anchor."
+    },
+    "subjectRole": {
+      "type": "string",
+      "description": "Field 4 (MANDATORY) - relationship of subject to the owner of the information.",
+      "enum": ["self", "guardian", "patient", "agent", "delegate"]
+    },
+    "context": {
+      "type": "array",
+      "description": "Field 5 (MANDATORY) - trust framework(s). did:cid of an Archon group / trust registry establishing the context. May be multiple (family -> country).",
+      "items": { "type": "string" }
+    },
+    "subjectAttributes": {
+      "type": "object",
+      "description": "Field 6 (OPTIONAL) - claims about contact (email / mobile) needed for registration notices. Pseudonymous values permitted.",
+      "properties": {
+        "email": { "type": "string" },
+        "mobile": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "permissions": {
+      "type": "array",
+      "description": "Field 7 (MANDATORY) - opt-in grants over the subject information. No entry = no consent. May reference an Authorization Code or a policy language (e.g. cedar).",
+      "items": {
+        "type": "object",
+        "properties": {
+          "resource": { "type": "string" },
+          "actions": { "type": "array", "items": { "type": "string" } },
+          "authorizationCode": { "type": "string" }
+        },
+        "required": ["resource", "actions"]
+      }
+    },
+    "contractualTerms": {
+      "type": "string",
+      "description": "Field 7 (cont.) - optional contractual binding (e.g. MyTerms) intended to be legally acceptable when accepted by each service."
+    },
+    "deviceStatement": {
+      "type": "object",
+      "description": "Field 8 (MANDATORY for AAL2+) - attestation the Issuer uses to verify protection of the subject's private key.",
+      "additionalProperties": true
+    },
+    "identityProof": {
+      "type": "array",
+      "description": "Field 9 (MANDATORY) - proofing documents / personhood (CAPTCHA) references, or did:cid of held VCs. 'None' is acceptable. Array so multiple proofs (IAL2+) can be supplied; may carry legal jurisdiction of the subject.",
+      "items": { "type": "string" }
+    },
+    "purposeOfUse": {
+      "type": "string",
+      "description": "Field 10 (MANDATORY for assurance > level 1) - reason / intent. See Purpose Query."
+    },
+    "acr": {
+      "type": "string",
+      "description": "Field 11 (OPTIONAL) - authentication context class ref, used only when Purpose is inadequate to establish required assurance of the resulting Entity Statement."
+    },
+    "issueDate": {
+      "type": "integer",
+      "description": "Field 12 (MANDATORY) - Linux epoch seconds."
+    },
+    "expirationDate": {
+      "type": "integer",
+      "description": "Field 13 (OPTIONAL) - Linux epoch seconds. Time-limits the relationship."
+    }
+  },
+  "required": [
+    "issuer",
+    "subject",
+    "subjectRole",
+    "context",
+    "permissions",
+    "identityProof",
+    "issueDate"
+  ]
+}
