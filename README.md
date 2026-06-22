@@ -37,11 +37,3 @@ export PROVIDER="GenitriX"           # CSP / service / agent
 ```
 
 Requires both IDs present in the keymaster wallet and the wallet unlocked.
-
-## Status
-
-- [x] Schemas drafted (field-for-field with the paper)
-- [x] Demo script drafted
-- [x] One-page analysis for Tom
-- [ ] Live run on flaxlap.local node (pending wallet unlock)
-- [ ] Persona/pseudonymity variant (UUID-vs-DID discussion with Tom)
